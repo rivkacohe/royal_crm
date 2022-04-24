@@ -1,7 +1,7 @@
 {
   "name": "royal-crm",
   "version": "1.0.0",
-  "description": "",
+  "description": "Mini CRM project aimed at managing customers, products and orders.",
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -19,5 +19,8 @@
   "homepage": "https://github.com/levworkshop/royal-crm#readme",
   "dependencies": {
     "express": "^4.17.3"
+  },
+  "directories": {
+    "doc": "docs"
   }
 }
