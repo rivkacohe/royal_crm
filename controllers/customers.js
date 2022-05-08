@@ -1,15 +1,4 @@
- const mysql = require('mysql2');
-const config = require('../config/dev')
- const pool = mysql.createPool({
-     host:config.DB_HOST,
-     user:config.DB_USER,
-     password:config.DB_PASSWORD,
-     database:config.DB_DATABASE,
-     waitForConnections: true,
-     connectionLimit: 5,
-     queueLimit:0
- });
- 
+const database =require('./database');
  
  module.exports= {
     //list:[],
@@ -26,14 +15,13 @@ const config = require('../config/dev')
         //     name: name,
         //     id: this.list.length,
         // });
-        pool.getConnection(function(connErr,connection){
+        database.pool.getConnection(function(connErr,connection){
             if (connErr) throw connErr;//not connected!
 
            // const sql ="INSERT INTO customers(name,phone,email,country_id)" + " VALUES('"+ name +"','"+phone+"','"+email+"','"+countryId+"');"; 
             const sql ="INSERT INTO customers(name,phone,email,country_id)"  + " VALUES(?,?,?,?);";
 
-            connection.query(sql,
-                 [name,phone,email,country_id],function(sqlErr,result,fields){
+            connection.query(sql,[name,phone,email,country_id],function(sqlErr,result,fields){
                 if (sqlErr) throw sqlErr;
                 console.log(fields);
                 console.log(result);
@@ -43,24 +31,18 @@ const config = require('../config/dev')
         });
     },
     
-     customerList:function(req,res){
-    //     this.list.forEach(customer =>{
-    //         console.log(`ok.name:${customer.name} was created`);
-    //     })
-    pool.getConnection(function (connErr,connection){
-        if (connErr) throw connErr;
 
-        const sql = "SELECT* FROM customers";
+    customersList: async function (req, res) {
+        const sql = "SELECT * FROM customers";
 
-        connection.query(sql,function(sqlErr,result,fields){
-            if (sqlErr) throw sqlErr;
-
-            res.send(result)
-        
-        });
-    });
-    }
-}
+        try {    
+            const connection = await database.getConnection();
+            const result = await database.runQuery(connection, sql);
+            res.send(result);
+        } 
+        catch (err) {
+            console.log(err);
+        }}}
 
 
 
