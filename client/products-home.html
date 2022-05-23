@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>products</title>
+</head>
+<body>
+
+    
+<h3>Export Products</h3>
+<form method="get" action="/products/export" >
+    <button type="submit">Export Products</button>
+
+</form>    
+
+
+<h3>Add Product</h3>
+<form method="post" action="/products" >
+<div>
+    <label>Name:</label>
+    <input type="text" name="name">
+</div>
+<div>
+    <label>Description:</label>
+    <input type="text" name="description">
+</div>
+<div>
+    <label>Price:</label>
+    <input type="number" name="price">
+</div>
+    <button type="submit">Add Product</button>
+
+</form> 
+
+</body>
+</html>

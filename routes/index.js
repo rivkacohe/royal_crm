@@ -1,13 +1,25 @@
 const express = require('express');
 const router = express.Router();
-const customersModule = require('../controllers/customers');
-const productsModule =require('../controllers/products');
-const ordersModule =require('../controllers/orders');
+const cm = require('../controllers/customers');
+const pm = require('../controllers/products');
+const ordersModule = require('../controllers/orders');
+const path = require('path');
+
 /* GET home page. */
-router.get('/customers', customersModule.customersList); 
+router.get('/', function (req, res, next) {
+  res.send('this is the home page. use /customers /products or /orders.')
+});
 
-router.get('/products',productsModule.productsList);
+router.get('/chat', function(req, res, next){
+  const filePath = path.join(__dirname, '../client', 'chat.html'); 
+  // c:\prjects\royal-crm\client\customers-home.html
+  res.sendFile(filePath);
+})
 
-router.get('/orders', ordersModule.ordersList);
+
+
+
+/* orders */
+
 
 module.exports = router;

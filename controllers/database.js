@@ -14,13 +14,12 @@ const pool = mysql.createPool({
   queueLimit: 0,
 });
 
- async function query(sql) {
+ async function query(sql,values) {
    const promisePool = pool.promise();
-   return [rows,fields]= await promisePool.query(sql)
+   return [rows,fields]= await promisePool.query(sql,values)
   }
    
 
 module.exports = {
-  pool,
  query
 };

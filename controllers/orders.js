@@ -1,32 +1,55 @@
 const database =require('./database');
-
+const joi=require('joi');
+const fs =require('fs');
+const path = require('path');
 module.exports={
    // orders:[],
-    // addOrder: function (customerId,productId,price,quantity){
-    //     //const name = process.argv.slice(2);
-    //     if (!productId || productId.length === 0) {
-    //         throw('ERROR: productId is empty');
-    //     }
-    //     // this.orders.push({
-    //     //     name: name,
-    //     //     id: this.orders.length,
-    //     // });
-    //     database.pool.getConnection(function(connErr,connection){
-    //         if (connErr) throw connErr;//not connected!
+    addOrder: async function (req, res,next){
+        const reqBody = req.body;
 
-    //         const sql ="INSERT INTO orders(customerId,productId,price,quantity)"  + " VALUES(?,?,?,?);";
+        const schema = joi.object({
+          customerId: joi.string().required().min(1).max(200),
+          productId: joi.string().required().min(1).max(200),
+          price: joi.number().required(),
+          quantity: joi.number().required().min(1)
+      })
+      
+      const {error, value}=  schema.validate(reqBody);
+  
+      if (error){
+          res.send (`error adding order ${error}`);
+          return;
+      }
+            
+      const sql ="INSERT INTO orders(customerId,productId,price,quantity)"  + " VALUES(?,?,?,?);";
 
-    //         connection.query(sql,[customerId,productId,price,quantity],function(sqlErr,result,fields){
-    //             if (sqlErr) throw sqlErr;
-    //             console.log(fields);
-    //             console.log(result);
-    //         });
-    //     });
-    // },
+  
+              try {    
+                  const result = await database.query(
+                       sql,
+                       [
+                          reqBody.customerId,
+                          reqBody.productId,
+                          reqBody.price,
+                          reqBody.quantity
+                      ]);
+                  } 
+              catch (err) {
+                  console.log(err);
+                  return;
+              }
+           
+              res.send(`order added successfully`);
+  
+  
+
+    },
     
     ordersList: async function (req, res,next) {
-        const sql = "SELECT* FROM orders";
-
+        const sql = "SELECT orderId,orderTime,customer.name,product.name,product.price FROM `orders`"+
+        " left JOIN customers customer ON customerId=customer.id"+
+        " left JOIN products product ON orders.productId=product.productId";
+debugger
         try{
             const result = await 
             database.query(sql);
@@ -35,5 +58,10 @@ module.exports={
             
                     catch(err){
                         console.log(err);
-                    }}}
+                    }},
+    
+    
+     exportOrders: async function () {},
+     searchOrders: async function () {},
+                }
         
