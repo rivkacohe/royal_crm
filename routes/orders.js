@@ -4,7 +4,7 @@ const om = require('../controllers/orders');
 const path = require('path');
 
 router.get('/home', function(req, res, next){
-    const filePath = path.join(__dirname, '../client', 'orders-home.html'); 
+    const filePath = fileMngmt.getHtmlFilePath('login.html'); 
     // c:\prjects\royal-crm\client\customers-home.html
     res.sendFile(filePath);
   })

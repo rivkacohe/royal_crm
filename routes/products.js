@@ -2,9 +2,10 @@ const express = require('express');
 const router = express.Router();
 const pm = require('../controllers/products');
 const path = require('path');
+const fileMngmt = require('../shared/fileMngmt')
 
 router.get('/home', function(req, res, next){
-    const filePath = path.join(__dirname, '../client', 'products-home.html'); 
+    const filePath =fileMngmt.getHtmlFilePath('products-home.html'); 
     // c:\prjects\royal-crm\client\customers-home.html
     res.sendFile(filePath);
   })

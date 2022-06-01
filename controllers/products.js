@@ -87,7 +87,7 @@ res.send(result[0]);
    
         },
         deleteProducts:async function(){
-            const sql = "drop name,description,price FROM products ORDER BY  name ASC;";
+            const sql = "DELETE name,description,price FROM products ORDER BY  name ASC;";
 
         },
         searchProducts: async function(){
