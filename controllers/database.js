@@ -1,18 +1,25 @@
 //open connection to the DB
-const { MongoClinet } = require("mongodb");
+const mysql =require('mysql2');
 const config = require("../config/dev");
 
 //connection pool stats
-const client = new MongoClinet(config,MONGO_DB);
-let db = undefined;
+const pool = mysql.createPool({
+  host: config.DB_HOST,
+  user: config.DB_USER,
+  password: config.DB_PASSWORD,
+  database: config.DB_NAME,
+  waitForConnections: true,
+  connectionLimit: 5,
+  queueLimit: 0
+});
 
-async function getDb(){
-  if (db) return db;
-  await client.connect();
-  return client.db(config.MONGO_DB);
-}
+async function query(sql, values) {
+  const promisePool = pool.promise();
+  return [rows, fields] = await promisePool.query(sql, values);
+}ent.db(config.MONGO_DB);
+
    
 
 module.exports = {
-  getDb,
+  query,
 };

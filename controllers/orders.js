@@ -1,7 +1,7 @@
 const database =require('./database');
 const joi=require('joi');
-const fs =require('fs');
-const path = require('path');
+const fileMgmt = require('../shared/fileMngmt');
+
 module.exports={
    // orders:[],
     addOrder: async function (req, res,next){
@@ -61,7 +61,15 @@ debugger
                     }},
     
     
-     exportOrders: async function () {},
+     exportOrders: async function (req, res, next) {
+        const sql = "SELECT orders.order_time, orders.price, orders.quantity, "+ 
+        "orders.product_name, orders.product_desc, orders.product_image, "+
+        "cust.name, cust.phone, cust.email FROM orders orders LEFT JOIN customers cust "+
+        "ON orders.id = cust.id ORDER BY orders.id ASC;";
+
+        fileMgmt.exportToFile(res, sql, 'orders');
+     },
+     
      searchOrders: async function () {},
                 }
         

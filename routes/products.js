@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
 const pm = require('../controllers/products');
-const path = require('path');
 const fileMngmt = require('../shared/fileMngmt')
 
 router.get('/home', function(req, res, next){

@@ -1,9 +1,5 @@
 const express = require('express');
 const router = express.Router();
-const cm = require('../controllers/customers');
-const pm = require('../controllers/products');
-const ordersModule = require('../controllers/orders');
-const path = require('path');
 const mwAuth = require('../middleware/auth');
 const auth = require('../controllers/auth')
 const fileMngmt = require('../shared/fileMngmt')
@@ -37,10 +33,6 @@ router.get('/chat',mwAuth, function(req, res, next){
   res.sendFile(filePath);
 })
 
-
-
-
-/* orders */
 
 
 module.exports = router;
