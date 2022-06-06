@@ -1,9 +1,23 @@
 const express = require('express');
 const router = express.Router();
-const cm = require('../controllers/customers');
-const pm = require('../controllers/products');
-const ordersModule = require('../controllers/orders');
-const path = require('path');
+const mwAuth = require('../middleware/auth');
+const auth = require('../controllers/auth');
+const fileMgmt = require('../shared/fileMgmt');
+
+/* authentication */
+router.get('/signin', function (req, res, next) {
+  const filePath = fileMgmt.getHtmlFilePath('login.html');
+  res.sendFile(filePath);
+});
+
+router.post('/login', auth.login);
+
+router.get('/logout', mwAuth, function (req, res, next) {
+  return res
+    .clearCookie('access_token')
+    .status(200)
+    .send('Successfully logged out.');
+})
 
 /* GET home page. */
 router.get('/', function (req, res, next) {
@@ -11,7 +25,7 @@ router.get('/', function (req, res, next) {
 });
 
 router.get('/chat', function(req, res, next){
-  const filePath = path.join(__dirname, '../client', 'chat.html'); 
+  const filePath = fileMgmt.getHtmlFilePath('chat.html');
   // c:\prjects\royal-crm\client\customers-home.html
   res.sendFile(filePath);
 })

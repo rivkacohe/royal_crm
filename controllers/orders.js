@@ -1,7 +1,7 @@
 const database =require('./database');
 const joi=require('joi');
-const fs =require('fs');
-const path = require('path');
+const fileMgmt = require('../shared/fileMgmt');
+
 module.exports={
    // orders:[],
     addOrder: async function (req, res,next){
@@ -21,47 +21,44 @@ module.exports={
           return;
       }
             
-      const sql ="INSERT INTO orders(customerId,productId,price,quantity)"  + " VALUES(?,?,?,?);";
-
-  
-              try {    
-                  const result = await database.query(
-                       sql,
-                       [
-                          reqBody.customerId,
-                          reqBody.productId,
-                          reqBody.price,
-                          reqBody.quantity
-                      ]);
-                  } 
-              catch (err) {
-                  console.log(err);
-                  return;
-              }
-           
-              res.send(`order added successfully`);
-  
-  
+      try {    
+        const database = await mongo.getDb();
+        const collection = database.collection('orders');
+        collection.insertOne(value); 
+        res.json(value);
+    }
+    catch (err) {
+        console.log(err);
+        res.status(400).send(`error adding order`);
+    }
 
     },
     
-    ordersList: async function (req, res,next) {
-        const sql = "SELECT orderId,orderTime,customer.name,product.name,product.price FROM `orders`"+
-        " left JOIN customers customer ON customerId=customer.id"+
-        " left JOIN products product ON orders.productId=product.productId";
-debugger
-        try{
-            const result = await 
-            database.query(sql);
-            res.send(result[0]);          
-                    }
+    ordersList: async function (req, res,next) {  
+       const param = req.query;
+        
+        try {
+            const database = await mongo.getDb();
+            const collection = database.collection('orders');
+
+            const result = await collection
+                .find({})
+                .sort({ name: 1 }) // ASC
+                .toArray();
             
-                    catch(err){
-                        console.log(err);
-                    }},
+            res.json(result);
+        }
+        catch (err) {
+            console.log(err);
+            res.status(400).send(err);
+        }
+    },
     
     
-     exportOrders: async function () {},
+     exportOrders: async function (req, res, nexts) {
+        fileMgmt.exportToFile(res, 'customers');
+
+     },
      searchOrders: async function () {},
                 }
         

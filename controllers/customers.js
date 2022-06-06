@@ -1,7 +1,7 @@
-const database =require('./database');
+const mongo = require('./database');
 const joi=require('joi');
-const fs =require('fs');
 const path = require('path');
+const fileMgmt = require('../shared/fileMgmt');
 
 
  module.exports= {
@@ -12,7 +12,7 @@ const path = require('path');
         name: joi.string().required().min(2).max(200),
         phone: joi.string().required().regex(/^[0-9]\d{8,11}$/),
         email: joi.string().required().regex(/^[^@]+@[^@]+$/),
-        country: joi.number().required(),
+        country: joi.string().required(),
     
     })
     
@@ -23,44 +23,42 @@ const path = require('path');
         return;
     }
           
-        const sql =
-        "INSERT INTO customers(name,phone,email,country_id)"+
-        " VALUES(?,?,?,?);";
+        // const sql =
+        // "INSERT INTO customers(name,phone,email,country_id)"+
+        // " VALUES(?,?,?,?);";
 
             try {    
-                const result = await database.query(
-                     sql,
-                     [
-                        reqBody.name,
-                        reqBody.phone,
-                        reqBody.email,
-                        reqBody.country
-                    ]);
-                } 
+                const database = await mongo.getDb();
+                const collection = database.collection('customers');
+                collection.insertOne(value); // { name: '', phone..., email}
+                res.json(value);
+            }
             catch (err) {
                 console.log(err);
-                return;
+                res.status(400).send(`error adding customer`);
             }
-         
-            res.send(`${reqBody.name} added successfully`);
-
-
-    },
+        },
     
 
     customersList: async function (req, res,next) {
-        const sql =
-        "SELECT cust.name, cust.phone, cust.email, " +
-        "cntr.name AS country_name FROM customers cust " +
-        "LEFT JOIN countries cntr ON cust.country_id = cntr.id ORDER BY cust.name ASC;";
+        const param = req.query;
+        
+        try {
+            const database = await mongo.getDb();
+            const collection = database.collection('customers');
 
-        try {    
-            const result = await database.query( sql);
-            res.send(result[0]);
-        } 
+            const result = await collection
+                .find({})
+                .sort({ name: 1 }) // ASC
+                .toArray();
+            
+            res.json(result);
+        }
         catch (err) {
             console.log(err);
-        }},
+            res.status(400).send(err);
+        }
+    },
     
    
     // todo: delete customer
@@ -72,31 +70,8 @@ const path = require('path');
     // todo: export all customers to file
     // sql: SELECT
     exportCustomers: async function(req, res, next) {
+        fileMgmt.exportToFile(res, 'customers');
 
-        const sql ="SELECT cust.name, cust.phone, cust.email, " +
-        "cntr.name AS country_name FROM customers cust " +
-        "LEFT JOIN countries cntr ON cust.country_id = cntr.id ORDER BY cust.name ASC;";
-        try {    
-            const result = await database.query( sql);
-            const now =new Date().getTime();
-            const filePath = path.join(__dirname,'../files',`products-${now}.txt`)
-            const stream = fs.createWriteStream(filePath);
-
-            stream.on('open',function(){
-                stream.write(JSON.stringify(result[0]));
-                stream.end();
-            });
-
-            stream.on('finish',function(){
-                res.send(`succes. File at ${filePath}`);
-            });
-       
-        } 
-        catch (err) {
-         throw err;
-        }
-     
-       
     },
 
     // todo: sort customers by column

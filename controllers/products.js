@@ -1,7 +1,6 @@
 const database =require('./database');
 const joi=require('joi');
-const fs =require('fs');
-const path = require('path');
+const fileMgmt = require('../shared/fileMgmt');
  
 module.exports={
     //products: [],
@@ -20,78 +19,52 @@ module.exports={
 
     const {error, value}=  schema.validate(reqBody);
     if (error){
-        res.send (`error adding customer ${error}`);
+        res.send (`error adding product ${error}`);
         return;
     }
-       
-       const sql ="INSERT INTO products(name,description,price,img)" +
-        " VALUES(?,?,?,?);";
 
         try {    
-            const result = await database.query(
-                 sql,
-                 [
-                    reqBody.name,
-                    reqBody.description,
-                    reqBody.price,
-                    reqBody.img
-                ]);
-            } 
+            const database = await mongo.getDb();
+            const collection = database.collection('products');
+            collection.insertOne(value); 
+            res.json(value);
+        }
         catch (err) {
             console.log(err);
-            return;
+            res.status(400).send(`error adding product`);
         }
-     
-        res.send(`${reqBody.name} added successfully`);
-
 
 },
 
     productsList: async function (req, res, next) {
-        const sql = "SELECT* FROM products ORDER BY name ASC;";
+        const param = req.query;
+        
+        try {
+            const database = await mongo.getDb();
+            const collection = database.collection('products');
 
-        try{
-
-const result =await database.query(sql);
-res.send(result[0]);          
+            const result = await collection
+                .find({})
+                .sort({ name: 1 }) // ASC
+                .toArray();
+            
+            res.json(result);
         }
-
-        catch(err){
+        catch (err) {
             console.log(err);
-        }},
+            res.status(400).send(err);
+        }
+    },
         exportProducts: async function(req, res, next){
-            const sql = "SELECT name,description,price FROM products ORDER BY  name ASC;";
-            try {    
-                const result = await database.query( sql);
-                const now =new Date().getTime();
-                const filePath = path.join(__dirname,'../files',`products-${now}.txt`)
-                const stream = fs.createWriteStream(filePath);
-    
-                stream.on('open',function(){
-                    stream.write(JSON.stringify(result[0]));
-                    stream.end();
-                });
-    
-                stream.on('finish',function(){
-                    res.send(`succes. File at ${filePath}`);
-                });
-           
-            } 
-            catch (err) {
-             throw err;
-            }
-
+            fileMgmt.exportToFile(res, 'products');
         },
         editProducts: async function(){
-            const sql = "update name,description,price FROM products ORDER BY  name ASC;";
    
         },
         deleteProducts:async function(){
-            const sql = "drop name,description,price FROM products ORDER BY  name ASC;";
 
         },
         searchProducts: async function(){
-            const sql = "SELECT  WHERE name,description,price FROM products ORDER BY  name ASC;";
 
         }
 }
