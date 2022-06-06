@@ -1,4 +1,4 @@
-const database =require('./database');
+const mongo =require('./database');
 const joi=require('joi');
 const fileMgmt = require('../shared/fileMgmt');
  

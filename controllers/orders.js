@@ -1,4 +1,4 @@
-const database =require('./database');
+const mongo =require('./database');
 const joi=require('joi');
 const fileMgmt = require('../shared/fileMgmt');
 
@@ -56,7 +56,7 @@ module.exports={
     
     
      exportOrders: async function (req, res, nexts) {
-        fileMgmt.exportToFile(res, 'customers');
+        fileMgmt.exportToFile(res, 'orders');
 
      },
      searchOrders: async function () {},

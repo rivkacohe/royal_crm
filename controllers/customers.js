@@ -1,6 +1,5 @@
 const mongo = require('./database');
 const joi=require('joi');
-const path = require('path');
 const fileMgmt = require('../shared/fileMgmt');
 
 
@@ -12,7 +11,7 @@ const fileMgmt = require('../shared/fileMgmt');
         name: joi.string().required().min(2).max(200),
         phone: joi.string().required().regex(/^[0-9]\d{8,11}$/),
         email: joi.string().required().regex(/^[^@]+@[^@]+$/),
-        country: joi.string().required(),
+        country: joi.number().required(),
     
     })
     
@@ -22,10 +21,6 @@ const fileMgmt = require('../shared/fileMgmt');
         res.send (`error adding customer ${error}`);
         return;
     }
-          
-        // const sql =
-        // "INSERT INTO customers(name,phone,email,country_id)"+
-        // " VALUES(?,?,?,?);";
 
             try {    
                 const database = await mongo.getDb();
