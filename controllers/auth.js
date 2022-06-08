@@ -3,6 +3,7 @@ const config = require('../config/dev');
 const joi = require('joi');
 const database = require('./database');
 const bcrypt = require('bcrypt');
+const { json } = require('express/lib/response');
 
 module.exports = {
     login: async function (req, res, next) {
@@ -30,6 +31,14 @@ module.exports = {
             // 123456
             const validPassword = await bcrypt.compare(reqBody.password, rows[0].password_hash);
             if (!validPassword) throw 'Invalid password';
+       
+       
+       res
+       json({
+           token: token
+       });
+       
+       
         } catch (err) {
             console.log(`Error: ${err}`);
             res.status(401).send('Unauthorized');
