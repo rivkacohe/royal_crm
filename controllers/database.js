@@ -16,7 +16,7 @@ const pool = mysql.createPool({
 async function query(sql, values) {
   const promisePool = pool.promise();
   return [rows, fields] = await promisePool.query(sql, values);
-}ent.db(config.MONGO_DB);
+}
 
    
 
