@@ -57,7 +57,11 @@ const fileMgmt = require('../shared/fileMngmt');
     });
 
     const { error, value } = schema.validate(param);
-
+    if (error) {
+        console.log(error);
+        res.status(400).send('add failed');
+        return
+    }
     const fieldsMap = new Map([
         ['name', 'customers.name'],
         ['email', 'customers.email'],

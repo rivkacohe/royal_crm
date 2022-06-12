@@ -31,7 +31,8 @@ module.exports = {
             // 123456
             const validPassword = await bcrypt.compare(reqBody.password, rows[0].password_hash);
             if (!validPassword) throw 'Invalid password';
-       
+            const param = { email: reqBody.email };
+            const token = jwt.sign(param, config.JWT_SECRET, { expiresIn: '72800s' });
        
        res
        json({
@@ -44,16 +45,5 @@ module.exports = {
             res.status(401).send('Unauthorized');
             return;
         }
-
-        const param = { email: reqBody.email };
-        const token = jwt.sign(param, config.JWT_SECRET, { expiresIn: '72800s' });
-
-        // todo: use authorization header
-        res
-            .cookie('access_token', token, {
-                httpOnly: true,
-                secure: true,
-            })
-            .send('Welcome, you are now logged in.');
     },
 } 
