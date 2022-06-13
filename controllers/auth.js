@@ -8,16 +8,18 @@ const { json } = require('express/lib/response');
 module.exports = {
     login: async function (req, res, next) {
         const reqBody = req.body;
+        console.log(reqBody);
 
-        const sechema = joi.object({
+        const schema = joi.object({
             email: joi.string().required().min(6).max(255).email(),
             password: joi.string().required().min(6),
         });
-
-        const { error, value } = sechema.validate(reqBody);
+0
+        const { error } = schema.validate(reqBody);
 
         if (error) {
             console.log(error.details[0].message);
+            console.log(reqBody);
             res.status(401).send('Unauthorized');
             return;
         }
@@ -34,10 +36,12 @@ module.exports = {
             const param = { email: reqBody.email };
             const token = jwt.sign(param, config.JWT_SECRET, { expiresIn: '72800s' });
        
-       res
-       json({
-           token: token
-       });
+            res
+            .cookie('access_token', token, {
+                httpOnly: true,
+                secure: true,
+            })
+         .send('Welcome, you are now logged in.');
        
        
         } catch (err) {

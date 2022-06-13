@@ -127,7 +127,7 @@ module.exports = {
         // validate number bot null
         //sql delete
         const schema = joi.object({
-            id: joi.number.required()
+            id: joi.number().required()
         });
         const { error, value } = schema.validate(req.params);
 

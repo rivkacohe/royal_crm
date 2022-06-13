@@ -34,7 +34,7 @@ const fileMgmt = require('../shared/fileMngmt');
                         reqBody.name,
                         reqBody.phone,
                         reqBody.email,
-                        reqBody.countryInputHtml
+                        reqBody.country
                     ]
                 );
             }

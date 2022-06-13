@@ -44,5 +44,22 @@
 
 </form> 
 
+<h3>Delete Product</h3>
+<label>ID</label>
+<input type="text" id="idToDelete">
+<input type="button" id="btnDelete" value="Delete Product">
+<script>
+    document.getElementById('btnDelete').addEventListener('click',()=>{
+const idToDelete= document.getElementById('idToDelete');
+deleteProduct(idToDelete);
+    })
+
+    function deleteProduct(id){
+        return fetch('/products/:id', {
+        method: 'DELETE',
+        body: id
+    }).then(response => response.json())
+    }
+</script>
 </body>
 </html>

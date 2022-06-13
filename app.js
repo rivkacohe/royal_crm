@@ -24,9 +24,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/users',auth, usersRouter);
-app.use('/customers',auth, customersRouter);
+app.use('/customers', customersRouter);
 app.use('/products',auth, productsRouter);
-app.use('/orders',auth, ordersRouter);
+app.use('/orders', ordersRouter);
 
 app.use(function(req,res,next){
     next(createError(404));
