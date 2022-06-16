@@ -4,62 +4,113 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>products</title>
+  <link rel="stylesheet" href="stylesheets/style.css">
 </head>
 <body>
-    <h3>Get all products</h3>
-    <form method="get" action="/products">
-        <select name="column">
-            <option value="name">Sort by product name</option>
-            <option value="price">Sort by product price</option>
-        </select>
-        <select name="sort">
-            <option value="ASC">Sort A-Z</option>
-            <option value="DESC">Sort Z-A</option>
-        </select>
-        <button type="submit">Get Products</button>
-    </form>
+    <div class="wrapper">
+        <div class="function">
+            <h3>Get all products</h3>
+            <form method="get" action="/products">
+                <select name="column">
+                    <option value="name">Sort by product name</option>
+                    <option value="price">Sort by product price</option>
+                </select>
+                <select name="sort">
+                    <option value="ASC">Sort A-Z</option>
+                    <option value="DESC">Sort Z-A</option>
+                </select>
+                <button type="submit">Get Products</button>
+            </form>
+        </div>
+        
+        <div class="function">
+            <h3>Export Products</h3>
+            <form method="get" action="/products/export" >
+                <button type="submit">Export Products</button>
+            
+            </form>    
+        </div>
     
-<h3>Export Products</h3>
-<form method="get" action="/products/export" >
-    <button type="submit">Export Products</button>
+    
+    <div class="function">
+        <h3>Add Product</h3>
+        <form method="post" action="/products" >
+        <div>
+            <label>Name:</label>
+            <input type="text" name="name">
+        </div>
+        <div>
+            <label>Description:</label>
+            <input type="text" name="description">
+        </div>
+        <div>
+            <label>Price:</label>
+            <input type="number" name="price">
+        </div>
+            <button type="submit">Add Product</button>
+        
+        </form> 
+    </div>
+    
+    <div class="function">
+        <h3>Delete Product</h3>
+        <label>ID</label>
+        <input type="number" id="idToDelete">
+        <input type="button" id="btnDelete" value="Delete Product">
+        
+    </div>
+    
+    <div class="function">
+        <h3>Update Product</h3>
+        <label>ID</label>
+        <input type="number" id="idToUpdate">
+        <br>
+        
+        <form id="form">
+            <input type="text" name="name" placeholder="Name" value="">
+            <input type="text" name="description" placeholder="Description">
+            <input type="number" name="price" placeholder="Price">
+            <button>Update</button>
+         </form>
+        
+    </div>
+    </div>
+    
 
-</form>    
-
-
-<h3>Add Product</h3>
-<form method="post" action="/products" >
-<div>
-    <label>Name:</label>
-    <input type="text" name="name">
-</div>
-<div>
-    <label>Description:</label>
-    <input type="text" name="description">
-</div>
-<div>
-    <label>Price:</label>
-    <input type="number" name="price">
-</div>
-    <button type="submit">Add Product</button>
-
-</form> 
-
-<h3>Delete Product</h3>
-<label>ID</label>
-<input type="text" id="idToDelete">
-<input type="button" id="btnDelete" value="Delete Product">
 <script>
-    document.getElementById('btnDelete').addEventListener('click',()=>{
-const idToDelete= document.getElementById('idToDelete');
+
+    //deltet request
+document.getElementById('btnDelete').addEventListener('click',()=>{
+const idToDelete= document.getElementById('idToDelete').value;
 deleteProduct(idToDelete);
     })
 
-    function deleteProduct(id){
-        return fetch('/products/:id', {
-        method: 'DELETE',
-        body: id
-    }).then(response => response.json())
-    }
+
+function deleteProduct(id){
+return  fetch(`http://localhost:3000/products/${id}`, {
+  method: 'DELETE',
+})}
+
+    //update request
+
+const fm = document.getElementById('form');
+fm.addEventListener('submit',e=>{
+    e.preventDefault();
+    let id= document.getElementById('idToUpdate').value;
+    const data ={};
+    new FormData(fm).forEach((value,key )=>data[key]=value)
+
+    fetch(`http://localhost:3000/products/${id}`, {
+method: 'PUT',
+headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+            },
+            body: JSON.stringify(data),
+        })})
+
+
+
 </script>
 </body>
 </html>

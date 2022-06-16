@@ -12,7 +12,7 @@ exportFiles:async function (res, sql, filePrefix){
 
         const result = await database.query( sql);
         const now =new Date().getTime();
-        const filePath = path.join(__dirname,'../files',`products-${now}.txt`)
+        const filePath = path.join(__dirname,'../exports',`${filePrefix}-${now}.txt`)
         const stream = fs.createWriteStream(filePath);
         
         stream.on('open',function(){

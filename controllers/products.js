@@ -1,7 +1,7 @@
 const database = require('./database');
 const joi = require('joi');
-const fileMgmt = require('../shared/fileMngmt');
-const res = require('express/lib/response');
+const fileMngmt = require('../shared/fileMngmt');
+
 module.exports = {
     //products: [],
     addProduct: async function (req, res, next) {
@@ -46,7 +46,7 @@ module.exports = {
 
     },
 
-    productsList: async function (req, res, next) {
+     productsList: async function (req, res, next) {
          /*
         1. [V] add fields in the products html
         2. [V] get the parameters from the request
@@ -70,7 +70,7 @@ module.exports = {
             throw error;
         }
 
-        const sql = `SELECT * FROM products ORDER BY products.${value.column} ${value.sort};`;
+    const sql = `SELECT * FROM products ORDER BY products.${value.column} ${value.sort};`;
 
         try {
 
@@ -84,11 +84,11 @@ module.exports = {
     },
     exportProducts: async function (req, res, next) {
         const sql = "SELECT name,description,price FROM products ORDER BY  name ASC;";
-        fileMgmt.exportToFile(res, sql, 'products');
+        fileMngmt.exportFiles(res,sql,'products');
     },
+
     editProducts: async function (req, res, next) {
         const reqBody = req.body;
-
         const schema = joi.object({
             name: joi.string().min(2).max(200),
             description: joi.string(),
@@ -96,6 +96,7 @@ module.exports = {
             image: joi.string().min(5).max(200),
         }).min(1);
 
+        console.log(req.body);
         const { error, value } = schema.validate(reqBody);
 
         if (error) {
@@ -108,8 +109,8 @@ module.exports = {
         // const fields = keys.map(key => `${key}=?`); // ['name=?','price=?']
         // const parseFileds = fields.join(','); // 'name=?,price=?'
         const fields = keys.map(key => `${key}=?`).join(',');
-        values.push(req.params.id);
-        const sql = `UPDATE products SET ${fields} WHERE id=?`;
+        values.push(req.params.productId);
+        const sql = `UPDATE products SET ${fields} WHERE productId=?`;
 
         try {
             const result = await database.query(sql, values);
@@ -121,14 +122,17 @@ module.exports = {
         }
 
     },
-    deleteProducts: async function (req, rest, next) {
+    deleteProducts: async function (req, res, next) {
 
-        //get client id 
-        // validate number bot null
-        //sql delete
+        // get client id that we want to delete
+        // validate: number not null
+        // const sql = DELETE
+        // return details of deleted product
+
         const schema = joi.object({
-            id: joi.number().required()
+            productId: joi.number().required()
         });
+console.log(req.params);
         const { error, value } = schema.validate(req.params);
 
         if (error) {
@@ -137,15 +141,18 @@ module.exports = {
             return;
         }
 
-        const sql = `DELETE FROM products WHERE id = ?`;
+        const sql = `DELETE FROM products WHERE productId=?`;
+
         try {
-            const result = await database.query(sql, [value.id]);
-            res.jsom(result[0]);
+            const result = await database.query(sql, [value.productId]);
+            res.json({
+                productId: value.productId
+            });
         }
         catch (err) {
-            res.status(400).send.message('error delete product')
+            res.status(400).send('error delete product');
+            console.log(err.message);
         }
-
     },
     searchProducts: async function () {
         const sql = "SELECT  WHERE name,description,price FROM products ORDER BY  name ASC;";

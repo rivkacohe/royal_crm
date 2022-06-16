@@ -1,6 +1,6 @@
 const joi=require('joi');
 const database = require('./database');
-const fileMgmt = require('../shared/fileMngmt');
+const fileMngmt = require('../shared/fileMngmt');
 
 
  module.exports= {
@@ -98,7 +98,7 @@ const fileMgmt = require('../shared/fileMngmt');
         "cntr.name AS country_name FROM customers cust " +
         "LEFT JOIN countries cntr ON cust.country_id = cntr.id ORDER BY cust.name ASC;";
      
-                fileMgmt.exportToFile(res, sql, 'customers');
+        fileMngmt.exportFiles(res,sql,'customers');
     },
 
     // todo: sort customers by column
