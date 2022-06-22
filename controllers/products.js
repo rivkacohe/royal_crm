@@ -132,7 +132,6 @@ module.exports = {
         const schema = joi.object({
             productId: joi.number().required()
         });
-console.log(req.params);
         const { error, value } = schema.validate(req.params);
 
         if (error) {

@@ -1,102 +1,164 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>orders</title>
-    <link rel="stylesheet" href="stylesheets/style.css">
 </head>
 <style>
-    table{
+    table {
+        border: 0.1rem;
+        border-style: solid;
+        border-color: black;
+        border-radius: 10px;
+    }
+
+    tr {
         border: 0.1rem;
         border-style: solid;
         border-color: black;
     }
-    th{
-        border: 0.1rem;
-        border-style: solid;
-        border-color: black;
-        padding: 5px; 
+    th {
+        border-bottom: 3px solid black;
+        padding: 5px;
+        text-align: center;
     }
-</style>
-<body>
-
-<h3>Orders List</h3>
-<table>
-    <tr>
-        <th id="orderId" class="property">Order Id</th>
-        <th id="orderTime" class="property">Order Time</th>
-        <th id="name" class="property">Name</th>
-        <th id="price" class="property">Price</th>
-      </tr>
-</table>
-
-<h3>Export Orders</h3>
-<form method="get" action="/orders/export" >
-    <button type="submit">Export Orders</button>
-
-</form>    
-
-
-<h3>Add Order</h3>
-<form method="post" action="/orders" >
-<div>
-    <label>Customer ID:</label>
-    <input type="number" name="customerId">
-</div>
-<div>
-    <label>Product ID:</label>
-    <input type="number" name="productId">
-</div>
-<div>
-    <label>Price:</label>
-    <input type="number" name="price">
-</div>
-<div>
-    <label>Quantity:</label>
-    <input type="number" name="quantity">
-</div>
-    <button type="submit">Add Order</button>
-
-</form> 
-
-<script>
-let orders=[];
-let properties = Array.prototype.slice.call( document.getElementsByClassName('property') )
-
-
-  window.onload = function(){
-      
-  const xhttp = new XMLHttpRequest();
-  xhttp.onload = function() {
-    myJSON =this.response;
-    orders=JSON.parse(myJSON);
-    console.log(orders[0]);
-orders.forEach(order => {
-const table=document.querySelector('table') 
-
-// Create an empty <tr> element and add it to the 1st position of the table:
-let row = table.insertRow(1);
-
-// Insert new cells (<td> elements) at the 1st and 2nd position of the "new" <tr> element:
-let orderId = row.insertCell(0);
-let orderTime = row.insertCell(1);
-let name = row.insertCell(2);
-let price = row.insertCell(3);
-
-// Add some text to the new cells:
-name.innerHTML = order.name;
-orderId.innerHTML =  order.orderId;
-orderTime.innerHTML =  order.orderTime;
-price.innerHTML =  order.price;
-    });
-  }
-
-  xhttp.open("GET", "http://localhost:3000/orders");
-  xhttp.send();
+td{
+    text-align: center;
 }
+    
+    .wrapper {
+        display: flex;
+        width: 80vw;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        margin: auto;
+    }
+
+    .function {
+        display: flex;
+        flex-direction: column;
+        width: 30%;
+        justify-content: center;
+        align-items: center;
+        background-color: rgb(163, 235, 235);
+        margin: 10px;
+        padding: 10px;
+        border-radius: 10px;
+    }
+
+    input,
+    select,
+    option {
+        border: none;
+        background-color: bisque;
+        border-radius: 10px;
+        padding: 5px;
+        margin: 5px;
+    }
+
+    button,
+    input[type=button] {
+        border: none;
+        background-color: rgb(14, 175, 187);
+        border-radius: 10px;
+        padding: 5px;
+        margin: 5px;
+    }
 
 
-</script>
+</style>
+
+<body>
+    <div class="wrapper">
+        <div class="function">
+            <h3>Orders List</h3>
+            <table>
+                <tr>
+                    <th id="orderId" class="property">Order Id</th>
+                    <th id="orderTime" class="property">Order Time</th>
+                    <th id="name" class="property">Name</th>
+                    <th id="price" class="property">Price</th>
+                </tr>
+            </table>
+        </div>
+
+
+        <div class="function">
+            <h3>Export Orders</h3>
+            <form method="get" action="/orders/export">
+                <button type="submit">Export Orders</button>
+            </form>
+        </div>
+
+
+        <div class="function">
+            <h3>Add Order</h3>
+            <form method="post" action="/orders">
+                <div>
+                    <label>Customer ID:</label>
+                    <input type="number" name="customerId">
+                </div>
+                <div>
+                    <label>Product ID:</label>
+                    <input type="number" name="productId">
+                </div>
+                <div>
+                    <label>Price:</label>
+                    <input type="number" name="price">
+                </div>
+                <div>
+                    <label>Quantity:</label>
+                    <input type="number" name="quantity">
+                </div>
+                <button type="submit">Add Order</button>
+
+            </form>
+        </div>
+
+
+    </div>
+
+    <script>
+        let orders = [];
+        let properties = Array.prototype.slice.call(document.getElementsByClassName('property'))
+
+
+        window.onload = function () {
+
+            const xhttp = new XMLHttpRequest();
+            xhttp.onload = function () {
+                myJSON = this.response;
+                orders = JSON.parse(myJSON);
+                console.log(orders[0]);
+                orders.forEach(order => {
+                    const table = document.querySelector('table')
+
+                    // Create an empty <tr> element and add it to the 1st position of the table:
+                    let row = table.insertRow(1);
+
+                    // Insert new cells (<td> elements) at the 1st and 2nd position of the "new" <tr> element:
+                    let orderId = row.insertCell(0);
+                    let orderTime = row.insertCell(1);
+                    let name = row.insertCell(2);
+                    let price = row.insertCell(3);
+
+                    // Add some text to the new cells:
+                    name.innerHTML = order.name;
+                    orderId.innerHTML = order.orderId;
+                    orderTime.innerHTML = order.orderTime;
+                    price.innerHTML = order.price;
+                });
+            }
+
+            xhttp.open("GET", "http://localhost:3000/orders");
+            xhttp.setRequestHeader("Access-Control-Allow-Origin", "http://localhost:3000");
+            xhttp.send();
+        }
+
+
+    </script>
 </body>
+
 </html>
