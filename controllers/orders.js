@@ -49,7 +49,6 @@ module.exports={
         const sql = "SELECT orderId,orderTime,customer.name,product.name,product.price FROM `orders`"+
         " left JOIN customers customer ON customerId=customer.id"+
         " left JOIN products product ON orders.productId=product.productId";
-debugger
         try{
             const result = await 
             database.query(sql);

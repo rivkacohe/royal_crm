@@ -1,4 +1,6 @@
-import { Component } from '@angular/core';
+import { AfterViewInit, Component } from '@angular/core';
+import { SessionService } from './core/session.service';
+
 
 @Component({
   selector: 'app-root',
@@ -6,7 +8,12 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.scss']
  
 })
-export class AppComponent {
-  
- 
+
+export class AppComponent implements AfterViewInit {
+
+  constructor(private sessionService: SessionService) { }
+
+  ngAfterViewInit(): void {
+      this.sessionService.redirectToFirstPage();
+  }
 }

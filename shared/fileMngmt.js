@@ -21,7 +21,8 @@ exportFiles:async function (res, sql, filePrefix){
         });
     
         stream.on('finish',function(){
-            res.send(`succes. File at ${filePath}`);
+            res.set('Access-Control-Allow-Origin', '*');
+            res.json({ path: filePath });
         });
     
     } 
