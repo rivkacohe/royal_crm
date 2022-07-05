@@ -75,7 +75,6 @@ const fileMngmt = require('../shared/fileMngmt');
 
         try {
             const result = await database.query(sql);
-            res.set('Access-Control-Allow-Origin','*');
             res.json(result[0]);
         }
         catch (err) {
@@ -136,7 +135,6 @@ const fileMngmt = require('../shared/fileMngmt');
                 searchQuery,
                 searchQuery , 
             ]);
-            res.set('Access-Control-Allow-Origin', '*');
             res.json(result[0]);
         } 
         catch (err) {
