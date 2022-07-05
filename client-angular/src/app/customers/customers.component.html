@@ -1,8 +1,9 @@
-<h1>Customers (<span>{{customers.length}}</span>)</h1>
+<h1>Customers (<span>{{customersTotal()}}</span>)</h1>
 
 <div>
-    <input [(ngModel)]="searchFieldValue" type="text"
+    <input (keydown)="findCustomer($event)" [(ngModel)]="searchFieldValue" type="text"
         placeholder="Search by name, email, country">
+        <button (click)="clearSearch()">X</button>
     <button (click)="exportCustomersData()">Export</button>
 </div>
 

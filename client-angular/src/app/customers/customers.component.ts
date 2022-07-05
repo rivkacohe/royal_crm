@@ -10,7 +10,7 @@ import { Customer, CustomerSort, FilePath, sortColumn, sortDirection } from '../
 })
 export class CustomersComponent implements OnInit {
 customers!: Array<Customer>;
-searchFieldValue!: NgModule;
+searchFieldValue!: string;
 searchTerm!: string;
 tableSort!: CustomerSort;
 
@@ -48,14 +48,13 @@ customersTotal(): number {
 }
 
 findCustomer(event: KeyboardEvent) {
-    // const value = event.target.value;
+  const value = this.searchFieldValue;
 
-    if (event.code === 'Enter' && event.target) {
-        // this.apiService.findCustomer().subscribe({
-        //     next: (data: Array<Customer>) => { this.customers = data },
-        //     error: (err) => console.error(err),
-        // })
-    }
+  if (event.key === 'Enter' && value.length >= 3) {
+      this.apiService.findCustomer(value).subscribe({
+          next: (data: Array<Customer>) => { this.customers = data },
+          error: (err) => console.error(err),
+      }) }  
 }
 
 sortCustomers(column: sortColumn) {
@@ -74,7 +73,10 @@ sortCustomers(column: sortColumn) {
       error: (err) => console.error(err)
   })
 }
-
+clearSearch() {
+  this.searchFieldValue = '';
+  this.getCustomers();
+}
 displaySort(column: sortColumn): string {
   const direction: sortDirection = this.tableSort[column];
 
