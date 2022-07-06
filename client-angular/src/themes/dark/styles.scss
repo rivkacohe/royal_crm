@@ -1,0 +1,10 @@
+@import "../common/bootstrap.scss";
+
+.light-theme{
+background-color: antiquewhite;
+
+&{
+    color: #213446;
+}
+
+}
