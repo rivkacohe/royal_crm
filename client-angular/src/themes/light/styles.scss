@@ -1,9 +1,10 @@
+@import "../common/bootstrap-variables.scss";
 @import "../common/bootstrap.scss";
 
-.dark-theme{
-background-color: #213446;
+.light-theme{
+    background-color: #f5f8ff;
 
-&{
-    color: #fff;
-}
+    & {
+        color: #213446;
+    }
 }

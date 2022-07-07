@@ -1,10 +1,14 @@
+@import "../common/bootstrap-variables.scss";
 @import "../common/bootstrap.scss";
 
-.light-theme{
-background-color: antiquewhite;
+.dark-theme{
+    background-color: #141719;
 
-&{
-    color: #213446;
+    &,
+    table th,
+    table td,
+    i{
+    color: #fff;
 }
 
 }
