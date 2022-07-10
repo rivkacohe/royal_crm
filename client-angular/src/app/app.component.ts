@@ -1,5 +1,6 @@
 import { AfterViewInit, Component, Renderer2 } from '@angular/core';
 import { SessionService } from './core/session.service';
+import { Theme, themeValues } from './shared/types';
 
 
 @Component({
@@ -11,11 +12,11 @@ import { SessionService } from './core/session.service';
 
 export class AppComponent implements AfterViewInit {
 
-  themes =[
+  themes: Array<Theme> =[
     {title: 'light', value:'light-theme'},
     {title: 'dark', value:'dark-theme'}
   ]
-  selectedTheme='light-theme'
+  selectedTheme: themeValues = 'light-theme';
   
   constructor(private sessionService: SessionService,
     private renderer: Renderer2) { }
