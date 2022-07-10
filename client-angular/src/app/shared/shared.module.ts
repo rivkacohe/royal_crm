@@ -4,6 +4,7 @@ import { ButtonComponent } from './button/button.component';
 import { HeaderComponent } from './header/header.component';
 import { FooterComponent } from './footer/footer.component';
 import { AppRoutingModule } from '../app-routing.module';
+import { PhonePipe } from './pipes/phone.pipe';
 
 
 
@@ -11,7 +12,8 @@ import { AppRoutingModule } from '../app-routing.module';
   declarations: [
     ButtonComponent,
     HeaderComponent,
-    FooterComponent
+    FooterComponent,
+    PhonePipe
   ],
   imports: [
     CommonModule,
@@ -20,7 +22,8 @@ import { AppRoutingModule } from '../app-routing.module';
   exports:[
     ButtonComponent,
     HeaderComponent,
-    FooterComponent
+    FooterComponent,
+    PhonePipe
   ]
 })
 export class SharedModule { }
