@@ -11,7 +11,7 @@ const fileMngmt = require('../shared/fileMngmt');
         name: joi.string().required().min(2).max(200),
         phone: joi.string().required().regex(/^[0-9]\d{8,11}$/),
         email: joi.string().required().regex(/^[^@]+@[^@]+$/),
-        country: joi.number().required(),
+        country_id: joi.number().required(),
     
     })
     
@@ -30,21 +30,17 @@ const fileMngmt = require('../shared/fileMngmt');
             try {    
                 const result = await database.query(
                     sql,
-                    [
-                        reqBody.name,
-                        reqBody.phone,
-                        reqBody.email,
-                        reqBody.country
-                    ]
+                [value.name, value.phone, value.email, value.country_id]
                 );
+
+                value.id =result[0].insertId;
+                res.json(value)
             }
             catch (err) {
                 console.log(err);
                 return;
             }
          
-            res.send(`${reqBody.name} added successfully`);
-
 
     },
     

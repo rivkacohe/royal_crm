@@ -1,5 +1,7 @@
 import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { ApiService } from 'src/app/core/api.service';
+import { RegisterUser } from 'src/app/shared/types';
 @Component({
   selector: 'app-signin',
   templateUrl: './signin.component.html',
@@ -10,10 +12,10 @@ export class SigninComponent implements OnInit, AfterViewInit {
   @ViewChild('first') firstField!: ElementRef;
 
   signUpForm = new FormGroup({
-    firstName: new FormControl('', {
+    first_name: new FormControl('', {
       validators: Validators.required, 
     }),
-    lastName: new FormControl('',{
+    last_name: new FormControl('',{
       validators:[Validators.required, Validators.required]
     }),
     email: new FormControl('',{
@@ -31,12 +33,26 @@ export class SigninComponent implements OnInit, AfterViewInit {
     if (!this.signUpForm.valid){
       return;
     }
-    console.log(this.signUpForm.value);
-    console.log((this.signUpForm.valid));
+    const value: RegisterUser = this.signUpForm.value;
+
+        const details = {
+            first_name: value.first_name,
+            last_name: value.last_name,
+            email: value.email,
+            password: value.password
+        };
+
+        this.apiService.register(details).subscribe({
+            next: (data) => {
+                // todo: show message to user
+                console.log('registered')
+            },
+            error: (err) => console.log(err)
+        })
     
     
   }
-  constructor() { }
+  constructor(private apiService: ApiService) { }
 
   ngOnInit(): void {
   }

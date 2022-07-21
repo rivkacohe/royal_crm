@@ -14,6 +14,10 @@ Mini CRM project aimed at managing customers, products and orders.
 3. Install dependencies: `npm install`
 4. Install nodemon globally:` npm i -g nodemon` and update package.json accordingly.
 5. In project, add configuration file: config/dev.js with database connection details.
-6. Run the app:
+6. In project, add folder `exports`.
+7. Install dependencies for Angular client:   
+`cd client-angular`  
+`npm install`
+8. Run the server:
  * Windows: `SET DEBUG='crm:*'; npm start`
  * MacOS/Linux: `$ DEBUG=royal-crm:* npm start`

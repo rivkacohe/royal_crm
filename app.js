@@ -13,6 +13,8 @@ var usersRouter = require('./routes/users');
 var customersRouter = require('./routes/customers');
 var productsRouter = require('./routes/products');
 var ordersRouter = require('./routes/orders');
+var countriesRouter = require('./routes/countries');
+
 
 
 var app = express();
@@ -29,9 +31,10 @@ app.use(express.static(path.join(__dirname, 'exports')));
 app.use(headers);
 app.use('/', indexRouter);
 app.use('/users',auth, usersRouter);
-app.use('/customers', customersRouter);
+app.use('/customers',auth, customersRouter);
 app.use('/products',auth, productsRouter);
-app.use('/orders', ordersRouter);
+app.use('/orders',auth, ordersRouter);
+app.use('/countries', auth, countriesRouter);
 
 app.use(function(req,res,next){
     next(createError(404));

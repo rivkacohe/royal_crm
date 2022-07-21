@@ -1,7 +1,8 @@
 import { Component, NgModule, OnInit } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { environment } from 'src/environments/environment';
 import { ApiService } from '../core/api.service';
-import { Customer, CustomerSort, FilePath, sortColumn } from '../shared/types';
+import { Country, Customer,Sort , FilePath, sortColumn } from '../shared/types';
 
 @Component({
   selector: 'app-customers',
@@ -10,9 +11,46 @@ import { Customer, CustomerSort, FilePath, sortColumn } from '../shared/types';
 })
 export class CustomersComponent implements OnInit {
 customers!: Array<Customer>;
+countries!: Array<Country>;
 searchFieldValue!: string;
 searchTerm!: string;
-tableSort!: CustomerSort;
+tableSort!: Sort;
+showForm = false;
+
+customerForm = new FormGroup({
+  name: new FormControl('', {
+      validators: Validators.required
+  }),
+  email: new FormControl('', {
+      validators: [Validators.required, Validators.email]
+  }),
+  phone: new FormControl('', {
+      validators: Validators.required
+  }),
+  country_id: new FormControl(0, {
+      validators: Validators.required
+  })
+});
+
+onSumbit() {
+  if (!this.customerForm.valid) {
+      return;
+  }
+
+  this.apiService.addCustomer(this.customerForm.value).subscribe({
+      next: (data: Customer) => { //todo: check data in response
+          this.getCustomers();
+          this.customerForm.reset();
+          this.showForm = false;
+      },
+      error: (err) => console.error(err)
+  })
+}
+
+toggleForm() {
+  this.getCountries(); 
+  this.showForm = !this.showForm;
+}
 
   constructor(private apiService: ApiService) { }
 
@@ -32,6 +70,16 @@ tableSort!: CustomerSort;
         // complete: () => console.log(`complete`)
     })
 }
+
+getCountries() {
+  this.apiService.getCountries().subscribe({
+      next: (data: Array<Country>) => { this.countries = data },
+      error: (err) => console.error(err),
+      complete: () => console.log(this.countries)
+
+  })
+}
+
 customersTotal(): number {
     return this.customers ? this.customers.length : 0;
 }

@@ -5,6 +5,9 @@ import { HeaderComponent } from './header/header.component';
 import { FooterComponent } from './footer/footer.component';
 import { AppRoutingModule } from '../app-routing.module';
 import { PhonePipe } from './pipes/phone.pipe';
+import { PricePipe } from './pipes/price.pipe';
+import { ExportComponent } from './export/export.component';
+import { PageTitleComponent } from './page-title/page-title.component';
 
 
 
@@ -13,7 +16,10 @@ import { PhonePipe } from './pipes/phone.pipe';
     ButtonComponent,
     HeaderComponent,
     FooterComponent,
-    PhonePipe
+    PhonePipe,
+    PricePipe,
+    ExportComponent,
+    PageTitleComponent
   ],
   imports: [
     CommonModule,
@@ -23,7 +29,10 @@ import { PhonePipe } from './pipes/phone.pipe';
     ButtonComponent,
     HeaderComponent,
     FooterComponent,
-    PhonePipe
+    PhonePipe,
+    PricePipe,
+    ExportComponent,
+    PageTitleComponent,
   ]
 })
 export class SharedModule { }

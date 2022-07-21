@@ -70,12 +70,17 @@ module.exports = {
             throw error;
         }
 
-    const sql = `SELECT * FROM products ORDER BY products.${value.column} ${value.sort};`;
+        const fieldsMap = new Map([
+            ['name', 'products.name'],
+            ['price', 'products.price'],
+        ]);
+
+    const sql = `SELECT * FROM products ORDER BY ${fieldsMap.get(value.column)} ${value.sort};`;
 
         try {
 
             const result = await database.query(sql);
-            res.send(result[0]);
+            res.json(result[0]);
         }
 
         catch (err) {

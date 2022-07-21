@@ -8,18 +8,16 @@ const { json } = require('express/lib/response');
 module.exports = {
     login: async function (req, res, next) {
         const reqBody = req.body;
-        console.log(reqBody);
 
         const schema = joi.object({
             email: joi.string().required().min(6).max(255).email(),
             password: joi.string().required().min(6),
         });
-0
-        const { error } = schema.validate(reqBody);
+
+        const { error, value } = schema.validate(reqBody);
 
         if (error) {
             console.log(error.details[0].message);
-            console.log(reqBody);
             res.status(401).send('Unauthorized');
             return;
         }
@@ -27,27 +25,66 @@ module.exports = {
         const sql = 'SELECT * FROM users WHERE email=?;';
 
         try {
-            const result = await database.query(sql, [reqBody.email]);
-            const rows = result[0];
-            // $2b$10$nOpWM1slxvsqdsHhW4VRkeY8fDsndvrf8aKHAwNdpgf
-            // 123456
-            const validPassword = await bcrypt.compare(reqBody.password, rows[0].password_hash);
+            const result = await database.query(sql, [value.email]);
+            const user = result[0][0];
+            const validPassword = await bcrypt.compare(value.password, user.password_hash);
             if (!validPassword) throw 'Invalid password';
-            const param = { email: reqBody.email };
+
+            const param = { email: value.email };
             const token = jwt.sign(param, config.JWT_SECRET, { expiresIn: '72800s' });
-       
-            res
-            .cookie('access_token', token, {
-                httpOnly: true,
-                secure: true,
-            })
-         .send('Welcome, you are now logged in.');
-       
-       
-        } catch (err) {
+
+            res.json({
+                token: token,
+                id: user.id,
+                first_name: user.first_name,
+                last_name: user.last_name,
+                email: user.email
+            });
+        }
+        catch (err) {
             console.log(`Error: ${err}`);
             res.status(401).send('Unauthorized');
             return;
         }
     },
-} 
+
+    registerUser: async function (req, res, next) {
+        const schema = joi.object({
+            first_name: joi.string().required().min(2).max(50),
+            last_name: joi.string().required().min(2).max(50),
+            email: joi.string().required().email().min(6).max(255),
+            password: joi.string().required().min(6).max(32),
+        });
+
+        const { error, value } = schema.validate(req.body);
+
+        if (error) {
+            console.log(error.details[0].message);
+            res.status(400).send('error sign up new user');
+            return;
+        }
+
+        const sql = `INSERT INTO users(first_name, last_name, email, password_hash) VALUES(?,?,?,?)`;
+
+        try {
+            const hash = await bcrypt.hash(value.password, 10);
+            const result = await database.query(sql, [
+                value.first_name,
+                value.last_name,
+                value.email,
+                hash
+            ]);
+
+            res.json({
+                id: result[0].insertId,
+                first_name: value.first_name,
+                last_name: value.last_name,
+                email: value.email
+            })
+        }
+        catch (err) {
+            console.log(err.message);
+            res.status(400).send('error sign up new user');
+        }
+    }
+}

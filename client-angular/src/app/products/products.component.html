@@ -1,1 +1,67 @@
-<p>products works!</p>
+<app-page-title [totalItems]="productsTotal()" [title]="'Products'"></app-page-title>
+<div>
+    <app-export (buttonClicked)="exportProductsData()"></app-export>
+</div>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Product
+                <button (click)="sortProducts('name')" class="btn btn-default">
+                    <i [ngClass]="displaySort('name')"></i>
+                </button>
+            </th>
+            <th>
+                Price
+                <button (click)="sortProducts('price')" class="btn btn-default">
+                    <i [ngClass]="displaySort('price')"></i>
+                </button>
+            </th>
+            <th>
+                Actioms
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let product of products">
+            <td class="d-flex flex-row">
+                <div class="me-3">
+                    <img [src]="imagePath(product.img)" [alt]="product.description"
+                        width="50" height="50" />
+                </div>
+                <div>
+                    <div class="fw-bold">{{ product.name }}</div>
+                    <span class="fw-light">{{ product.description }}</span>
+                </div>
+            </td>
+            <td>{{product.price}}<i class="bi bi-currency-dollar"></i></td>
+            <td>
+                <button (click)="delteProduct(product.id)" class="btn btn-primary"  data-bs-toggle="modal" data-bs-target="#exampleModal">
+                    <i class="bi bi-trash3"></i>
+                </button>
+                <!-- <button (click)="exportCustomersData()" class="btn btn-primary">
+                    <i class="bi bi-trash3"></i>
+                                        <i class="bi bi-pencil"></i>
+
+                </button> -->
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Delete Success</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          Product ID:{{delteProduct}} Deleted successfully.
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
